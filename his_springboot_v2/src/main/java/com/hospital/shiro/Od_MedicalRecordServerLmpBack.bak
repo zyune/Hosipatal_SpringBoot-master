@@ -1,0 +1,644 @@
+package com.hospital.shiro;
+
+import cn.hutool.core.date.DateTime;
+import com.hospital.mapper.*;
+import com.hospital.model.od.*;
+import com.hospital.model.rd.FmedItem;
+import com.hospital.model.rd.FmedItemExample;
+import com.hospital.model.sf.RegistrationInfo;
+import com.hospital.model.sf.RegistrationInfoExample;
+import com.hospital.service.Od_MedicalRecordServer;
+import com.hospital.utils.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * 2019年东软睿道实训项目-东软云医院项目
+ *
+ * @ClassName Od_MedicalRecordServerlmp
+ * @Description 请输入你的简化描述！
+ * @Author 方聪
+ * @Date 2019/6/5 18:46
+ * @Version 1.0
+ **/
+public class Od_MedicalRecordServerLmpBack implements Od_MedicalRecordServer {
+
+    Logger logger = LoggerFactory.getLogger(Od_MedicalRecordServerLmpBack.class);
+
+    @Resource
+    MedicalRecordPageMapper odMapper;
+
+    @Resource
+    MedicalRecordPageTemplateMapper mrpTeplateMapper;
+    @Resource
+    MedicalRecordPageMapper medicalRecordPageMapper;
+    @Resource
+    RegistrationInfoMapper reginstrMapper;
+
+    @Resource
+    DiagnosiMapper diagnosiMapper; // 诊断
+
+    @Resource
+    UsedDiagnosiMapper usedDiagnosiMapper;//常用诊断
+    @Resource
+    DiseaseMapper diseaseMapper;//诊断list
+    @Resource
+    CheckItemMapper checkItemMapper; // 检查项目
+    @Resource
+    FmedItemMapper fmedItemMapper;//非药品项目
+    @Resource
+    CheckApplicationMapper checkApplicationMapper;//检查申请
+    @Resource
+    CheckStackMapper checkStackMapper;
+    @Resource
+    CheckResultMapper checkResultMapper;
+    @Resource
+    CheckImgMapper checkImgMapper;
+
+
+    @Override
+    public String test() {
+        return null;
+    }
+
+    @Override
+    public List<RegistrationInfo> getWaitPatient(int od_id, String today) {
+        RegistrationInfoExample example = new RegistrationInfoExample();
+        RegistrationInfoExample.Criteria c = example.createCriteria();
+//        选择条件
+        c.andOutpatientDoctorNoEqualTo(od_id);
+        c.andCreateTimeBetween(DateUtils.getSqlDate(today + " 00:00:00"), DateUtils.getSqlDate(DateUtils.getDate()));
+        c.andStateEqualTo("1");//1 是有效的
+        c.andIsSeenDocatorEqualTo("1");
+
+        List<RegistrationInfo> registrationInfos = reginstrMapper.selectByExample(example);
+
+        return registrationInfos;
+
+    }
+
+    @Override
+    public List<RegistrationInfo> getSeeEdPatient(int od_id, String today) {
+
+        RegistrationInfoExample example = new RegistrationInfoExample();
+        RegistrationInfoExample.Criteria c = example.createCriteria();
+//        选择条件
+        c.andOutpatientDoctorNoEqualTo(od_id);
+        c.andCreateTimeBetween(DateUtils.getSqlDate(today + " 00:00:00"), DateUtils.getSqlDate(DateUtils.getDate()));
+
+        c.andStateEqualTo("1");// 是有效的
+
+        List<String> s = new ArrayList<>();
+        s.add("2");
+        s.add("3");
+        c.andIsSeenDocatorIn(s);
+
+        List<RegistrationInfo> registrationInfos = reginstrMapper.selectByExample(example);
+
+        return registrationInfos;
+
+
+    }
+
+    @Override
+    public MedicalRecordPage getMedicalRecordPageByPatientBLH(String blh) {
+
+        MedicalRecordPageExample ex = new MedicalRecordPageExample();
+        MedicalRecordPageExample.Criteria c = ex.createCriteria();
+
+        c.andStateEqualTo("1");
+        c.andMedicalRecordEqualTo(blh);
+        List<MedicalRecordPage> medicalRecordPages = odMapper.selectByExample(ex);
+        if (medicalRecordPages == null)
+            return null;
+        else {
+            return medicalRecordPages.get(0);
+        }
+    }
+
+    //废弃的方法
+    @Override
+    public void PutMedicalRecordPage(String blh, MedicalRecordPage mrp) {
+
+        MedicalRecordPage m = getMedicalRecordPageByPatientBLH(blh);
+        if (m == null) {
+            odMapper.insert(mrp);
+        } else {
+            // state == 1 or 2会由vue前端进行上传
+            odMapper.updateByPrimaryKey(mrp);
+            //然后需要更新下m
+        }
+
+    }
+
+    @Override
+    public List<RegistrationInfo> getDePartMentPatient(int dePartMent_id, String today) {
+        List<RegistrationInfo> registrationInfo = null;
+        try {
+            System.out.println(dePartMent_id + today);
+
+            RegistrationInfoExample ex = new RegistrationInfoExample();
+            RegistrationInfoExample.Criteria c = ex.createCriteria();
+            c.andStateEqualTo("1");
+            c.andDepartmentNoEqualTo(dePartMent_id);
+
+            c.andCreateTimeBetween(DateUtils.getSqlDate(today + " 00:00:00"), DateUtils.getSqlDate(DateUtils.getDate()));
+            registrationInfo = reginstrMapper.selectByExample(ex);
+
+        } catch (Exception e) {
+
+            System.out.println(e.getMessage());
+        }
+        return registrationInfo;
+    }
+
+    /**
+     * @return void
+     * @Description 上传模板
+     * @Date 11:22 2019/6/14
+     * @Param [mrpTemplate]
+     **/
+    @Override
+    public void postMRPTemplate(MedicalRecordPageTemplate mrpTemplate, List<Diagnosi> diagnosiList) {
+        if (diagnosiList.size() == 0) {
+            mrpTemplate.setDiagnosiNos("");
+            mrpTeplateMapper.insert(mrpTemplate);
+        } else {
+            //把dianosiList插入到数据库中并且返回id
+            StringBuilder sb = new StringBuilder();
+            for (Diagnosi d : diagnosiList) {
+                int id = diagnosiMapper.insert(d);
+                sb.append(d.getId() + "|");
+            }
+            System.out.println(sb.toString().substring(0, sb.toString().length() - 1));
+            mrpTemplate.setDiagnosiNos(sb.toString().substring(0, sb.toString().length() - 1));
+            mrpTeplateMapper.insert(mrpTemplate);
+        }
+    }
+
+    @Override
+    public List<MedicalRecordPageTemplate> getMRPDePartMentTmplate(int doctorDePartMentID) {
+
+        MedicalRecordPageTemplateExample ex = new MedicalRecordPageTemplateExample();
+        MedicalRecordPageTemplateExample.Criteria c = ex.createCriteria();
+
+        c.andStateNotEqualTo("1");
+        c.andDepartmentNoEqualTo(doctorDePartMentID);
+        List<MedicalRecordPageTemplate> medicalRecordPageTemplates = mrpTeplateMapper.selectByExample(ex);
+
+        return medicalRecordPageTemplates;
+    }
+
+    @Override
+    public List<MedicalRecordPageTemplate> getMRPMyTemplate(int doctorID) {
+        //sql
+        MedicalRecordPageTemplateExample ex = new MedicalRecordPageTemplateExample();
+        MedicalRecordPageTemplateExample.Criteria c = ex.createCriteria();
+        c.andOutpatientDoctorNoEqualTo(doctorID);
+        List<MedicalRecordPageTemplate> medicalRecordPageTemplates = mrpTeplateMapper.selectByExample(ex);
+        return medicalRecordPageTemplates;
+    }
+
+    @Override
+    public MedicalRecordPageTemplate getMRPTmplateByID(int id) {
+        //通过模板id获得模板
+
+        //none 不需要做
+        return null;
+    }
+
+    @Override
+    public List<MedicalRecordPageTemplate> getMRPTmplateByDoctorID(int doctorID) {
+
+        MedicalRecordPageTemplateExample ex = new MedicalRecordPageTemplateExample();
+        MedicalRecordPageTemplateExample.Criteria c = ex.createCriteria();
+        c.andOutpatientDoctorNoEqualTo(doctorID);
+        List<MedicalRecordPageTemplate> medicalRecordPageTemplates = mrpTeplateMapper.selectByExample(ex);
+        return medicalRecordPageTemplates;
+    }
+
+    @Override
+    public List<Disease> getDisease(String code, String name) {
+        DiseaseExample ex = new DiseaseExample();
+
+        DiseaseExample.Criteria c = ex.createCriteria();
+        if (code != null && !code.trim().equals("")) {
+            c.andDiseaseCodeLike("%" + code + "%");
+        } else {
+            c.andDiseaseNameLike("%" + name + "%");
+        }
+        //select * from user where code like "%v%"
+        List<Disease> diseases = diseaseMapper.selectByExample(ex);
+        return diseases;
+    }
+
+    @Override
+    public void postUsedDiagnosi(UsedDiagnosi dia) {
+        //新增加常用诊断
+        usedDiagnosiMapper.insert(dia);
+    }
+
+    @Override
+    public List<UsedDiagnosi> getUsedDiagnosi(int doctorID) {
+        UsedDiagnosiExample ex = new UsedDiagnosiExample();
+        UsedDiagnosiExample.Criteria c = ex.createCriteria();
+        c.andDoctorNoEqualTo(doctorID);
+        List<UsedDiagnosi> diseases = usedDiagnosiMapper.selectByExample(ex);
+        return diseases;
+
+    }
+
+    @Override
+    public void PutMedicalRecordPage(MedicalRecordPage mrp, List<Diagnosi> diagnosiList) {
+        if(mrp.getId() == null){
+            //说明是新增加的
+            if(diagnosiList == null){
+                mrp.setDiagnosiNos("");
+            } else{
+                StringBuilder sb = new StringBuilder();
+                for (Diagnosi d : diagnosiList) {
+                    diagnosiMapper.insert(d);
+                    sb.append(d.getId() + "|");
+                }
+                mrp.setDiagnosiNos(sb.toString().substring(0, sb.toString().length() - 1));
+            }
+            medicalRecordPageMapper.insert(mrp);
+        } else {
+            //也就是更新数据
+            //但是这里有一个问题就是？不能重新insert之前已经insert过的诊断，那么就需要判断那些是没有insert过的数据即可
+            StringBuilder sb = new StringBuilder();
+            if(!mrp.getDiagnosiNos().equals("")){
+                sb.append(mrp.getDiagnosiNos()+"|");
+
+            }
+            for (Diagnosi d : diagnosiList) {
+                if (d.getId() == null) {
+                    diagnosiMapper.insert(d);
+                    sb.append(d.getId() + "|");
+                }
+            }
+            mrp.setDiagnosiNos(sb.toString().substring(0, sb.toString().length() - 1));
+            medicalRecordPageMapper.updateByPrimaryKey(mrp);
+        }
+
+    }
+    @Override
+    public void PutMedicalRecordPageEnd(MedicalRecordPage mrp, List<Diagnosi> diagnosiList) {
+        this.PutMedicalRecordPage(mrp,diagnosiList);
+        //然后再通过mrp
+        MedicalRecordPageExample ex =new MedicalRecordPageExample();
+        MedicalRecordPageExample.Criteria c = ex.createCriteria();
+        c.andMedicalRecordEqualTo(mrp.getMedicalRecord());
+        List<MedicalRecordPage> medicalRecordPages = medicalRecordPageMapper.selectByExample(ex);
+        MedicalRecordPage m = medicalRecordPages.get(0);
+        m.setState("2");
+        medicalRecordPageMapper.updateByPrimaryKey(m);
+    }
+
+
+
+    @Override
+    public void sureAlertAppliction(String[] info) {
+
+
+        CheckApplication checkApplication = checkApplicationMapper.selectByPrimaryKey(Integer.parseInt(info[3]));
+        checkApplication.setCheckApplicationName(info[0]);
+        checkApplication.setCheckApplicationName(info[1]);
+        checkApplicationMapper.updateByPrimaryKey(checkApplication);
+
+    }
+
+    @Override
+    public List<Object> getItemResult(String id) {
+//        getItemResult()
+        List<Object> list = new ArrayList<>();
+        CheckResultExample ex = new CheckResultExample();
+        CheckResultExample.Criteria c = ex.createCriteria();
+        c.andCheckApplicationNoEqualTo(Integer.parseInt(id));
+        List<CheckResult> checkResults = checkResultMapper.selectByExample(ex);
+        CheckResult result = checkResults.get(0);
+        //得到了result的属性了
+        list.add(result);
+        if(result.getCheckResultImgs() == null || result.getCheckResultImgs().equals("")){
+            List<CheckImg> resultImgs = new ArrayList<>();
+            list.add(resultImgs);
+        }else{
+            String[] imgs = result.getCheckResultImgs().split("\\|");
+            List<CheckImg> resultImgs = new ArrayList<>();
+            for(String imgId:imgs){
+                CheckImg checkImg = checkImgMapper.selectByPrimaryKey(Integer.parseInt(imgId));
+                resultImgs.add(checkImg);
+            }
+            list.add(resultImgs);
+        }
+        return list;
+    }
+
+    @Override
+    public List<MedicalRecordPageTemplate> getMRPTmplateDePartMentID(int doctorDePartMentID) {
+        MedicalRecordPageTemplateExample ex = new MedicalRecordPageTemplateExample();
+        MedicalRecordPageTemplateExample.Criteria c = ex.createCriteria();
+        c.andDepartmentNoEqualTo(doctorDePartMentID);
+        List<MedicalRecordPageTemplate> medicalRecordPageTemplates = mrpTeplateMapper.selectByExample(ex);
+        return medicalRecordPageTemplates;
+    }
+
+    @Override
+    public List<MedicalRecordPageTemplate> getMRPTmplateAll() {
+        MedicalRecordPageTemplateExample ex = new MedicalRecordPageTemplateExample();
+        MedicalRecordPageTemplateExample.Criteria c = ex.createCriteria();
+        List<MedicalRecordPageTemplate> medicalRecordPageTemplates = mrpTeplateMapper.selectByExample(ex);
+        return medicalRecordPageTemplates;
+    }
+
+    @Override
+    public List<RegistrationInfo> getSearchPatientByName(String searchName) {
+        // 判断什么表
+        RegistrationInfoExample ex = new RegistrationInfoExample();
+        RegistrationInfoExample.Criteria c = ex.createCriteria();//创建查询条件的对象的构造器
+        c.andStateEqualTo("1");//state = 1
+        c.andPatientNameLike("%" + searchName + "%");//name like "%ss%"
+        //select * from user where state = 1 and name like "%ss%"
+        //ex == select * from user where state = 1 and name like "%ss%"
+        List<RegistrationInfo> registrationInfos = reginstrMapper.selectByExample(ex);
+        return registrationInfos;
+    }
+
+    @Override
+    public void postCheckApplication(CheckApplication check, List<CheckItem> checkItems) {
+
+        if (checkItems.size() == 0) {
+            check.setCheckItemNos("");
+            checkApplicationMapper.insert(check);
+        } else {
+            //把dianosiList插入到数据库中并且返回id
+            StringBuilder sb = new StringBuilder();
+            for (CheckItem d : checkItems) {
+                int id = checkItemMapper.insert(d);
+                sb.append(d.getId() + "|");
+            }
+            System.out.println(sb.toString().substring(0, sb.toString().length() - 1));
+            check.setCheckItemNos(sb.toString().substring(0, sb.toString().length() - 1));
+            checkApplicationMapper.insert(check);
+        }
+    }
+
+    @Override
+    public List<FmedItem> getCheckFemdItem() {
+        FmedItemExample ex = new FmedItemExample();
+        FmedItemExample.Criteria c = ex.createCriteria();
+        c.andRecordtypeEqualTo(2);
+        List<FmedItem> fmedItems = fmedItemMapper.selectByExample(ex);
+        return fmedItems;
+    }
+
+    @Override
+    public List<CheckAppliacationSUm> getCheckApplicationByblh(String blh) {
+        CheckApplicationExample ex = new CheckApplicationExample();
+        CheckApplicationExample.Criteria c = ex.createCriteria();
+        c.andMedicalRecordEqualTo(blh);
+        List<CheckApplication> fmedItems = checkApplicationMapper.selectByExample(ex);
+        //定义一个的List
+        ArrayList<CheckAppliacationSUm> list = new ArrayList<>();
+
+        CheckAppliacationSUm checkAppliacationSUm = new CheckAppliacationSUm();
+        for (int j = 0; j < fmedItems.size(); j++) {
+            checkAppliacationSUm = new CheckAppliacationSUm();
+            CheckApplication value = fmedItems.get(j);
+            System.out.println("第" + (j + 1) + "查询出来的数据为：" + value.toString());
+            checkAppliacationSUm.setCheckApplication(value);
+            if (value.getCheckItemNos().equals("")) {
+                //也就是说这个申请是没有数据的
+                checkAppliacationSUm.setCheckItemList(null);
+            } else {
+                String[] checkItemNos = value.getCheckItemNos().split("\\|");
+                System.out.println(Arrays.toString(checkItemNos));
+                List<CheckItem> clist = new ArrayList<>();
+                for (int i = 0; i < checkItemNos.length; i++) {
+                    //从数据库中通过id获得item
+                    int i1 = Integer.parseInt(checkItemNos[i]);
+                    CheckItem checkItem = checkItemMapper.selectByPrimaryKey(i1);
+                    clist.add(checkItem);
+                }
+                checkAppliacationSUm.setCheckItemList(clist);
+            }
+            list.add(checkAppliacationSUm);
+        }
+        return list;
+    }
+
+    @Override
+    public List<FmedItem> getCheckFemdItemByName(String name) {
+
+
+        FmedItemExample ex = new FmedItemExample();
+        FmedItemExample.Criteria c = ex.createCriteria();
+        c.andRecordtypeEqualTo(2);
+        c.andItemnameLike("%" + name + "%");
+        List<FmedItem> fmedItems = fmedItemMapper.selectByExample(ex);
+        return fmedItems;
+
+    }
+
+    @Override
+    public void putCheckApplicationUseStateToOk(String id) {
+        CheckApplication checkApplication = checkApplicationMapper.selectByPrimaryKey(Integer.parseInt(id));
+        checkApplication.setUseState("2");
+        checkApplicationMapper.updateByPrimaryKey(checkApplication);
+    }
+
+    @Override
+    public void postNewCheckApplication(CheckApplication checkApplication) {
+        String checkItemNos = "";
+        double sumPrice = 0.0;
+        if(checkApplication.getCheckItemNos()!=null && !checkApplication.getCheckItemNos().equals("") ){
+            System.out.println(checkApplication.getCheckItemNos());
+            //然后需要更
+            String[] code = checkApplication.getCheckItemNos().split("\\|");
+            for(int i=0;i<code.length;i++){
+                //生成一个checkItem
+                FmedItemExample ex = new FmedItemExample();
+                FmedItemExample.Criteria c = ex.createCriteria();
+                c.andItemcodeEqualTo(code[i]);
+                List<FmedItem> fmedItems = fmedItemMapper.selectByExample(ex);
+
+
+                CheckItem checkItem = new CheckItem();
+                checkItem.setItemHandleState("1");
+                checkItem.setCreateTime(new DateTime());
+                checkItem.setId(null);
+                checkItem.setItemCode(code[i]);
+                checkItem.setItemName(fmedItems.get(0).getItemname());
+                checkItem.setItemPrice(fmedItems.get(0).getPrice());
+                sumPrice +=fmedItems.get(0).getPrice();
+                int checkItemID = checkItemMapper.insert(checkItem);
+                checkItemID = checkItem.getId();
+                checkItemNos += checkItemID+"|";
+            }
+            checkItemNos = checkItemNos.substring(0, checkItemNos.length() - 1);
+        }
+        checkApplication.setCheckItemNos(checkItemNos);
+        checkApplication.setPrice(sumPrice);
+        checkApplicationMapper.insert(checkApplication);
+    }
+
+    @Override
+    public int postNewCheckItem(CheckItem checkItem, Integer checkApplicationID) {
+
+        //首先通过id获得
+        CheckApplication checkApplication = checkApplicationMapper.selectByPrimaryKey(checkApplicationID);
+
+        String checkItemNos = checkApplication.getCheckItemNos();
+        //insert,返回的insert为主键,那么这个表xml需要进行额外的操作
+        int checkItemID = checkItemMapper.insert(checkItem);
+        checkItemID = checkItem.getId();//返回主键
+        if (!checkItemNos.trim().equals("")) {
+            //说明这个有值的数据
+            checkItemNos += "|" + checkItemID;
+        } else {
+            checkItemNos += "" + checkItemID;
+        }
+
+        //然后再更新
+        checkApplication.setCheckItemNos(checkItemNos);
+        checkApplication.setPrice(checkApplication.getPrice()+checkItem.getItemPrice());
+        checkApplicationMapper.updateByPrimaryKey(checkApplication);
+        return checkItemID;
+    }
+
+    @Override
+    public void putCheckApplicationUseStateToDelete(String id) {
+        CheckApplication checkApplication = checkApplicationMapper.selectByPrimaryKey(Integer.parseInt(id));
+        checkApplication.setUseState("3");
+        checkApplicationMapper.updateByPrimaryKey(checkApplication);
+    }
+
+    @Override
+    public MRPListSum getMRPandListbyMedicalRecord(String blh) {
+        MRPListSum mr = new MRPListSum();
+        MedicalRecordPageExample ex = new MedicalRecordPageExample();
+        MedicalRecordPageExample.Criteria c = ex.createCriteria();
+        c.andMedicalRecordEqualTo(blh);
+        List<MedicalRecordPage> medicalRecordPages = medicalRecordPageMapper.selectByExample(ex);
+        MedicalRecordPage m = medicalRecordPages.get(0);
+        mr.setMrp(m);
+        if (m.getDiagnosiNos().trim().equals("")) {
+            mr.setDiagnosiList(null);
+        } else {
+            List<Diagnosi> lsit = new ArrayList<>();
+            String[] split = m.getDiagnosiNos().trim().split("\\|");
+            for (String s : split) {
+                //查询对象
+                lsit.add(diagnosiMapper.selectByPrimaryKey(Integer.parseInt(s)));
+            }
+            mr.setDiagnosiList(lsit);
+        }
+        return mr;
+    }
+
+    @Override
+    public void deleteCheckItemByCheckApplicationID(String checkID, String itemID) {
+        CheckApplication checkApplication = checkApplicationMapper.selectByPrimaryKey(Integer.parseInt(checkID));
+        String checkItemNos = checkApplication.getCheckItemNos();
+        //减去的price
+        Double subitemPrice = checkItemMapper.selectByPrimaryKey(Integer.parseInt(itemID)).getItemPrice();
+        if (!checkItemNos.trim().equals("")) {
+            checkItemMapper.deleteByPrimaryKey(Integer.parseInt(itemID));
+            //在nos中去除
+            String[] split = checkItemNos.split("\\|"); //[1,1]
+            if (split.length > 1) {
+                //index为该相同的所在的位置，重新生成一个nos
+                String newNos = "";
+                for (String id : split) {
+                    if (id.equals(itemID)) {
+                    } else {
+                        newNos += id + "|";
+                    }
+                }
+                String substring = newNos.substring(0, newNos.length() - 1);
+                checkApplication.setPrice(checkApplication.getPrice()-subitemPrice);
+                checkApplication.setCheckItemNos(substring);
+            } else {
+                checkApplication.setCheckItemNos("");
+            }
+            checkApplicationMapper.updateByPrimaryKey(checkApplication);
+        }
+    }
+
+    @Override
+    public void postNewCheckTemplate(AcceptCheckTemplate acceptCheckTemplate) {
+        //这个方法把数据保存在数据库中
+
+        List<String[]> itemCodeList = acceptCheckTemplate.getItemCodeList();
+        if (itemCodeList == null) {
+            acceptCheckTemplate.getCheckStack().setFmedItemNos("");
+            acceptCheckTemplate.getCheckStack().setFmedItemNames("");
+        } else {
+            String nos = "";
+            String names = "";
+            for (int i = 0; i < itemCodeList.size(); i++) {
+                String code = itemCodeList.get(i)[0];
+                nos += code + "|";
+                String name = itemCodeList.get(i)[1];
+                names += name + "|";
+            }
+            nos = nos.substring(0, nos.length() - 1);
+            acceptCheckTemplate.getCheckStack().setFmedItemNos(nos);
+
+            names = names.substring(0, names.length() - 1);
+            acceptCheckTemplate.getCheckStack().setFmedItemNames(names);
+        }
+        acceptCheckTemplate.getCheckStack().setId(null);
+        checkStackMapper.insert(acceptCheckTemplate.getCheckStack());
+
+
+    }
+
+    @Override
+    public List<CheckStack> getCheckTemplateAllDeID(int doctorDePartMentID) {
+
+        CheckStackExample ex = new CheckStackExample();
+        CheckStackExample.Criteria c = ex.createCriteria();
+        c.andStateEqualTo("1");
+        c.andDepartmentNoEqualTo(doctorDePartMentID + "");
+        return checkStackMapper.selectByExample(ex);
+    }
+
+    @Override
+    public List<CheckStack> getCheckTemplateAll() {
+        CheckStackExample ex = new CheckStackExample();
+        CheckStackExample.Criteria c = ex.createCriteria();
+
+        return checkStackMapper.selectByExample(ex);
+    }
+
+    @Override
+    public List<CheckStack> getCheckTemplateByDoctorID(int doctorID) {
+        CheckStackExample ex = new CheckStackExample();
+        CheckStackExample.Criteria c = ex.createCriteria();
+        c.andStateEqualTo("1");
+        c.andOutpatientDoctorNoEqualTo(doctorID);
+        return checkStackMapper.selectByExample(ex);
+    }
+
+    @Override
+    public List<FmedItem> getFemdItemDataByFemdCodes(String codes) {
+        List<FmedItem> list = new ArrayList<FmedItem>();
+        String[] split = codes.split("\\|");
+        for (int i = 0; i < split.length; i++) {
+            FmedItemExample ex = new FmedItemExample();
+            FmedItemExample.Criteria c = ex.createCriteria();
+            c.andItemcodeEqualTo(split[i]);
+            List<FmedItem> fmedItems = fmedItemMapper.selectByExample(ex);
+            list.add(fmedItems.get(0));
+        }
+        return list;
+    }
+
+
+}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN" "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <context id="testTables" targetRuntime="MyBatis3">
+        <commentGenerator>
+            <!-- 是否去除自动生成的注释 true：是 ： false:否 -->
+            <property name="suppressAllComments" value="true" />
+        </commentGenerator>
+        <!--数据库连接的信息：驱动类、连接地址、用户名、密码 -->
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://119.23.69.23:3306/his_hospital?useSSL=true" userId="root" password="69D76929e570">
+        </jdbcConnection>
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL 和
+            NUMERIC 类型解析为java.math.BigDecimal -->
+        <javaTypeResolver>
+            <property name="forceBigDecimals" value="true" />
+        </javaTypeResolver>
+
+        <!--&lt;!&ndash; targetProject:生成PO类的位置 &ndash;&gt;  -->
+
+        <!--note:     这里是需要更改的-->
+        <javaModelGenerator targetPackage="com.hospital.model" targetProject=".\src\main\java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+            <!-- 从数据库返回的值被清理前后的空格 -->
+            <property name="trimStrings" value="true" />
+        </javaModelGenerator>
+
+        <!-- targetProject:mapper映射文件生成的位置 -->
+        <sqlMapGenerator targetPackage="mapper" targetProject=".\src\main\resources">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+        </sqlMapGenerator>
+
+        <!-- targetPackage：mapper接口生成的位置 -->
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.hospital.mapper" targetProject=".\src\main\java">
+            <!-- enableSubPackages:是否让schema作为包的后缀 -->
+            <property name="enableSubPackages" value="false" />
+        </javaClientGenerator>
+
+        <table tableName="%"  >
+            <generatedKey column="id" sqlStatement="MySql" identity="true"/>
+        </table>
+
+        <!-- 指定数据库表，比如这里指定了数据库中的一张名为x_user的表，每一个table标签对应一张表 -->
+        <!--生成你自己需要的数据库表，别一下子就全部给生成了，需要什么生成什么!,以义务来-->
+        <!--<table schema="" tableName="medical_record_page"></table>-->
+        <!--<table schema="" tableName="medical_record_page_template"></table>-->
+        <!--<table schema="" tableName="diagnosi"></table>-->
+        <!--<table schema="" tableName="used_diagnosi"></table>-->
+        <!--<table schema="" tableName="registration_info"></table>-->
+        <!--<table schema="" tableName="registration_fee"></table>-->
+        <!--<table schema="" tableName="registration_level"></table>-->
+        <!--<table schema="" tableName="registration_pay"></table>-->
+        <!--<table schema="" tableName="registration_pay_way"></table>-->
+        <!--<table schema="" tableName="check_application"></table>-->
+        <!--<table schema="" tableName="check_item"></table>-->
+        <!--<table schema="" tableName="check_result"></table>-->
+        <!--<table schema="" tableName="check_img"></table>-->
+        <!--<table schema="" tableName="check_stack"></table>-->
+
+
+        <!--<table schema="" tableName="inspection_application"></table>-->
+        <!--<table schema="" tableName="inspection_item"></table>-->
+        <!--<table schema="" tableName="inspection_result"></table>-->
+        <!--<table schema="" tableName="inspection_img"></table>-->
+
+        <!--<table schema="" tableName="herbal_application"></table>-->
+        <!--<table schema="" tableName="herbal_item"></table>-->
+
+        <!--<table schema="" tableName="drugs"></table>-->
+
+
+
+
+
+
+
+
+
+    </context>
+</generatorConfiguration>
+

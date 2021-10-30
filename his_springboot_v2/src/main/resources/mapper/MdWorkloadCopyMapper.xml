@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.mapper.MdWorkloadCopyMapper">
+  <resultMap id="BaseResultMap" type="com.hospital.model.MdWorkloadCopy">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="medical_doctor_no" jdbcType="INTEGER" property="medicalDoctorNo" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="patient_num" jdbcType="INTEGER" property="patientNum" />
+    <result column="sum_price" jdbcType="DECIMAL" property="sumPrice" />
+    <result column="check_price" jdbcType="DECIMAL" property="checkPrice" />
+    <result column="test_price" jdbcType="DECIMAL" property="testPrice" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="state" jdbcType="CHAR" property="state" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, medical_doctor_no, start_time, end_time, patient_num, sum_price, check_price, 
+    test_price, create_time, state
+  </sql>
+  <select id="selectByExample" parameterType="com.hospital.model.MdWorkloadCopyExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from md_workload_copy
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from md_workload_copy
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from md_workload_copy
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hospital.model.MdWorkloadCopyExample">
+    delete from md_workload_copy
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hospital.model.MdWorkloadCopy">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into md_workload_copy (medical_doctor_no, start_time, end_time, 
+      patient_num, sum_price, check_price, 
+      test_price, create_time, state
+      )
+    values (#{medicalDoctorNo,jdbcType=INTEGER}, #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, 
+      #{patientNum,jdbcType=INTEGER}, #{sumPrice,jdbcType=DECIMAL}, #{checkPrice,jdbcType=DECIMAL}, 
+      #{testPrice,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP}, #{state,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hospital.model.MdWorkloadCopy">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into md_workload_copy
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="medicalDoctorNo != null">
+        medical_doctor_no,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="patientNum != null">
+        patient_num,
+      </if>
+      <if test="sumPrice != null">
+        sum_price,
+      </if>
+      <if test="checkPrice != null">
+        check_price,
+      </if>
+      <if test="testPrice != null">
+        test_price,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="medicalDoctorNo != null">
+        #{medicalDoctorNo,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="patientNum != null">
+        #{patientNum,jdbcType=INTEGER},
+      </if>
+      <if test="sumPrice != null">
+        #{sumPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="checkPrice != null">
+        #{checkPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="testPrice != null">
+        #{testPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hospital.model.MdWorkloadCopyExample" resultType="java.lang.Long">
+    select count(*) from md_workload_copy
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update md_workload_copy
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.medicalDoctorNo != null">
+        medical_doctor_no = #{record.medicalDoctorNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.startTime != null">
+        start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null">
+        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.patientNum != null">
+        patient_num = #{record.patientNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.sumPrice != null">
+        sum_price = #{record.sumPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.checkPrice != null">
+        check_price = #{record.checkPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.testPrice != null">
+        test_price = #{record.testPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update md_workload_copy
+    set id = #{record.id,jdbcType=INTEGER},
+      medical_doctor_no = #{record.medicalDoctorNo,jdbcType=INTEGER},
+      start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      patient_num = #{record.patientNum,jdbcType=INTEGER},
+      sum_price = #{record.sumPrice,jdbcType=DECIMAL},
+      check_price = #{record.checkPrice,jdbcType=DECIMAL},
+      test_price = #{record.testPrice,jdbcType=DECIMAL},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      state = #{record.state,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hospital.model.MdWorkloadCopy">
+    update md_workload_copy
+    <set>
+      <if test="medicalDoctorNo != null">
+        medical_doctor_no = #{medicalDoctorNo,jdbcType=INTEGER},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="patientNum != null">
+        patient_num = #{patientNum,jdbcType=INTEGER},
+      </if>
+      <if test="sumPrice != null">
+        sum_price = #{sumPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="checkPrice != null">
+        check_price = #{checkPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="testPrice != null">
+        test_price = #{testPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hospital.model.MdWorkloadCopy">
+    update md_workload_copy
+    set medical_doctor_no = #{medicalDoctorNo,jdbcType=INTEGER},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      patient_num = #{patientNum,jdbcType=INTEGER},
+      sum_price = #{sumPrice,jdbcType=DECIMAL},
+      check_price = #{checkPrice,jdbcType=DECIMAL},
+      test_price = #{testPrice,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

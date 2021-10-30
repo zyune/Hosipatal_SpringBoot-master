@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.mapper.DailySettlementMapper">
+  <resultMap id="BaseResultMap" type="com.hospital.model.DailySettlement">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="fee" jdbcType="DOUBLE" property="fee" />
+    <result column="registrar_no" jdbcType="INTEGER" property="registrarNo" />
+    <result column="registrar_name" jdbcType="VARCHAR" property="registrarName" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="bank1" jdbcType="VARCHAR" property="bank1" />
+    <result column="bank2" jdbcType="VARCHAR" property="bank2" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, fee, registrar_no, registrar_name, start_time, end_time, bank1, bank2
+  </sql>
+  <select id="selectByExample" parameterType="com.hospital.model.DailySettlementExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from daily_settlement
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from daily_settlement
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from daily_settlement
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hospital.model.DailySettlementExample">
+    delete from daily_settlement
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hospital.model.DailySettlement">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into daily_settlement (fee, registrar_no, registrar_name, 
+      start_time, end_time, bank1, 
+      bank2)
+    values (#{fee,jdbcType=DOUBLE}, #{registrarNo,jdbcType=INTEGER}, #{registrarName,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{bank1,jdbcType=VARCHAR}, 
+      #{bank2,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hospital.model.DailySettlement">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into daily_settlement
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="fee != null">
+        fee,
+      </if>
+      <if test="registrarNo != null">
+        registrar_no,
+      </if>
+      <if test="registrarName != null">
+        registrar_name,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="bank1 != null">
+        bank1,
+      </if>
+      <if test="bank2 != null">
+        bank2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="fee != null">
+        #{fee,jdbcType=DOUBLE},
+      </if>
+      <if test="registrarNo != null">
+        #{registrarNo,jdbcType=INTEGER},
+      </if>
+      <if test="registrarName != null">
+        #{registrarName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bank1 != null">
+        #{bank1,jdbcType=VARCHAR},
+      </if>
+      <if test="bank2 != null">
+        #{bank2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hospital.model.DailySettlementExample" resultType="java.lang.Long">
+    select count(*) from daily_settlement
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update daily_settlement
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.fee != null">
+        fee = #{record.fee,jdbcType=DOUBLE},
+      </if>
+      <if test="record.registrarNo != null">
+        registrar_no = #{record.registrarNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.registrarName != null">
+        registrar_name = #{record.registrarName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startTime != null">
+        start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null">
+        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.bank1 != null">
+        bank1 = #{record.bank1,jdbcType=VARCHAR},
+      </if>
+      <if test="record.bank2 != null">
+        bank2 = #{record.bank2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update daily_settlement
+    set id = #{record.id,jdbcType=INTEGER},
+      fee = #{record.fee,jdbcType=DOUBLE},
+      registrar_no = #{record.registrarNo,jdbcType=INTEGER},
+      registrar_name = #{record.registrarName,jdbcType=VARCHAR},
+      start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      bank1 = #{record.bank1,jdbcType=VARCHAR},
+      bank2 = #{record.bank2,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hospital.model.DailySettlement">
+    update daily_settlement
+    <set>
+      <if test="fee != null">
+        fee = #{fee,jdbcType=DOUBLE},
+      </if>
+      <if test="registrarNo != null">
+        registrar_no = #{registrarNo,jdbcType=INTEGER},
+      </if>
+      <if test="registrarName != null">
+        registrar_name = #{registrarName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="bank1 != null">
+        bank1 = #{bank1,jdbcType=VARCHAR},
+      </if>
+      <if test="bank2 != null">
+        bank2 = #{bank2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hospital.model.DailySettlement">
+    update daily_settlement
+    set fee = #{fee,jdbcType=DOUBLE},
+      registrar_no = #{registrarNo,jdbcType=INTEGER},
+      registrar_name = #{registrarName,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      bank1 = #{bank1,jdbcType=VARCHAR},
+      bank2 = #{bank2,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.mapper.SchedulingRuleMapper">
+  <resultMap id="BaseResultMap" type="com.hospital.model.SchedulingRule">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="week" jdbcType="CHAR" property="week" />
+    <result column="department_no" jdbcType="INTEGER" property="departmentNo" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+    <result column="od_no" jdbcType="INTEGER" property="odNo" />
+    <result column="od_name" jdbcType="VARCHAR" property="odName" />
+    <result column="level_type" jdbcType="CHAR" property="levelType" />
+    <result column="day" jdbcType="CHAR" property="day" />
+    <result column="quota" jdbcType="INTEGER" property="quota" />
+    <result column="create_admin_name" jdbcType="VARCHAR" property="createAdminName" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="state" jdbcType="CHAR" property="state" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, week, department_no, department_name, od_no, od_name, level_type, day, quota, 
+    create_admin_name, create_time, state
+  </sql>
+  <select id="selectByExample" parameterType="com.hospital.model.SchedulingRuleExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from scheduling_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from scheduling_rule
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from scheduling_rule
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hospital.model.SchedulingRuleExample">
+    delete from scheduling_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hospital.model.SchedulingRule">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into scheduling_rule (week, department_no, department_name, 
+      od_no, od_name, level_type, 
+      day, quota, create_admin_name, 
+      create_time, state)
+    values (#{week,jdbcType=CHAR}, #{departmentNo,jdbcType=INTEGER}, #{departmentName,jdbcType=VARCHAR}, 
+      #{odNo,jdbcType=INTEGER}, #{odName,jdbcType=VARCHAR}, #{levelType,jdbcType=CHAR}, 
+      #{day,jdbcType=CHAR}, #{quota,jdbcType=INTEGER}, #{createAdminName,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{state,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hospital.model.SchedulingRule">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into scheduling_rule
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="week != null">
+        week,
+      </if>
+      <if test="departmentNo != null">
+        department_no,
+      </if>
+      <if test="departmentName != null">
+        department_name,
+      </if>
+      <if test="odNo != null">
+        od_no,
+      </if>
+      <if test="odName != null">
+        od_name,
+      </if>
+      <if test="levelType != null">
+        level_type,
+      </if>
+      <if test="day != null">
+        day,
+      </if>
+      <if test="quota != null">
+        quota,
+      </if>
+      <if test="createAdminName != null">
+        create_admin_name,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="week != null">
+        #{week,jdbcType=CHAR},
+      </if>
+      <if test="departmentNo != null">
+        #{departmentNo,jdbcType=INTEGER},
+      </if>
+      <if test="departmentName != null">
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="odNo != null">
+        #{odNo,jdbcType=INTEGER},
+      </if>
+      <if test="odName != null">
+        #{odName,jdbcType=VARCHAR},
+      </if>
+      <if test="levelType != null">
+        #{levelType,jdbcType=CHAR},
+      </if>
+      <if test="day != null">
+        #{day,jdbcType=CHAR},
+      </if>
+      <if test="quota != null">
+        #{quota,jdbcType=INTEGER},
+      </if>
+      <if test="createAdminName != null">
+        #{createAdminName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hospital.model.SchedulingRuleExample" resultType="java.lang.Long">
+    select count(*) from scheduling_rule
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update scheduling_rule
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.week != null">
+        week = #{record.week,jdbcType=CHAR},
+      </if>
+      <if test="record.departmentNo != null">
+        department_no = #{record.departmentNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.departmentName != null">
+        department_name = #{record.departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.odNo != null">
+        od_no = #{record.odNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.odName != null">
+        od_name = #{record.odName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.levelType != null">
+        level_type = #{record.levelType,jdbcType=CHAR},
+      </if>
+      <if test="record.day != null">
+        day = #{record.day,jdbcType=CHAR},
+      </if>
+      <if test="record.quota != null">
+        quota = #{record.quota,jdbcType=INTEGER},
+      </if>
+      <if test="record.createAdminName != null">
+        create_admin_name = #{record.createAdminName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update scheduling_rule
+    set id = #{record.id,jdbcType=INTEGER},
+      week = #{record.week,jdbcType=CHAR},
+      department_no = #{record.departmentNo,jdbcType=INTEGER},
+      department_name = #{record.departmentName,jdbcType=VARCHAR},
+      od_no = #{record.odNo,jdbcType=INTEGER},
+      od_name = #{record.odName,jdbcType=VARCHAR},
+      level_type = #{record.levelType,jdbcType=CHAR},
+      day = #{record.day,jdbcType=CHAR},
+      quota = #{record.quota,jdbcType=INTEGER},
+      create_admin_name = #{record.createAdminName,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      state = #{record.state,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hospital.model.SchedulingRule">
+    update scheduling_rule
+    <set>
+      <if test="week != null">
+        week = #{week,jdbcType=CHAR},
+      </if>
+      <if test="departmentNo != null">
+        department_no = #{departmentNo,jdbcType=INTEGER},
+      </if>
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="odNo != null">
+        od_no = #{odNo,jdbcType=INTEGER},
+      </if>
+      <if test="odName != null">
+        od_name = #{odName,jdbcType=VARCHAR},
+      </if>
+      <if test="levelType != null">
+        level_type = #{levelType,jdbcType=CHAR},
+      </if>
+      <if test="day != null">
+        day = #{day,jdbcType=CHAR},
+      </if>
+      <if test="quota != null">
+        quota = #{quota,jdbcType=INTEGER},
+      </if>
+      <if test="createAdminName != null">
+        create_admin_name = #{createAdminName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hospital.model.SchedulingRule">
+    update scheduling_rule
+    set week = #{week,jdbcType=CHAR},
+      department_no = #{departmentNo,jdbcType=INTEGER},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      od_no = #{odNo,jdbcType=INTEGER},
+      od_name = #{odName,jdbcType=VARCHAR},
+      level_type = #{levelType,jdbcType=CHAR},
+      day = #{day,jdbcType=CHAR},
+      quota = #{quota,jdbcType=INTEGER},
+      create_admin_name = #{createAdminName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.mapper.OdWorkloadMapper">
+  <resultMap id="BaseResultMap" type="com.hospital.model.OdWorkload">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="outpatient_doctor_no" jdbcType="INTEGER" property="outpatientDoctorNo" />
+    <result column="outpatient_doctor_name" jdbcType="VARCHAR" property="outpatientDoctorName" />
+    <result column="start_time" jdbcType="TIMESTAMP" property="startTime" />
+    <result column="end_time" jdbcType="TIMESTAMP" property="endTime" />
+    <result column="patient_num" jdbcType="INTEGER" property="patientNum" />
+    <result column="check_sum_price" jdbcType="DOUBLE" property="checkSumPrice" />
+    <result column="dispose_sum_price" jdbcType="DOUBLE" property="disposeSumPrice" />
+    <result column="inspection_sum_price" jdbcType="DOUBLE" property="inspectionSumPrice" />
+    <result column="herbal_sum_price" jdbcType="DOUBLE" property="herbalSumPrice" />
+    <result column="medical_sum_price" jdbcType="DOUBLE" property="medicalSumPrice" />
+    <result column="surgery_sum_price" jdbcType="DOUBLE" property="surgerySumPrice" />
+    <result column="registered_sum_price" jdbcType="DOUBLE" property="registeredSumPrice" />
+    <result column="sum_price" jdbcType="DOUBLE" property="sumPrice" />
+    <result column="other_sum_price" jdbcType="DOUBLE" property="otherSumPrice" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="state" jdbcType="CHAR" property="state" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, outpatient_doctor_no, outpatient_doctor_name, start_time, end_time, patient_num, 
+    check_sum_price, dispose_sum_price, inspection_sum_price, herbal_sum_price, medical_sum_price, 
+    surgery_sum_price, registered_sum_price, sum_price, other_sum_price, create_time, 
+    state
+  </sql>
+  <select id="selectByExample" parameterType="com.hospital.model.OdWorkloadExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from od_workload
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from od_workload
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from od_workload
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hospital.model.OdWorkloadExample">
+    delete from od_workload
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hospital.model.OdWorkload">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into od_workload (outpatient_doctor_no, outpatient_doctor_name, 
+      start_time, end_time, patient_num, 
+      check_sum_price, dispose_sum_price, inspection_sum_price, 
+      herbal_sum_price, medical_sum_price, surgery_sum_price, 
+      registered_sum_price, sum_price, other_sum_price, 
+      create_time, state)
+    values (#{outpatientDoctorNo,jdbcType=INTEGER}, #{outpatientDoctorName,jdbcType=VARCHAR}, 
+      #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{patientNum,jdbcType=INTEGER}, 
+      #{checkSumPrice,jdbcType=DOUBLE}, #{disposeSumPrice,jdbcType=DOUBLE}, #{inspectionSumPrice,jdbcType=DOUBLE}, 
+      #{herbalSumPrice,jdbcType=DOUBLE}, #{medicalSumPrice,jdbcType=DOUBLE}, #{surgerySumPrice,jdbcType=DOUBLE}, 
+      #{registeredSumPrice,jdbcType=DOUBLE}, #{sumPrice,jdbcType=DOUBLE}, #{otherSumPrice,jdbcType=DOUBLE}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{state,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hospital.model.OdWorkload">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into od_workload
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="outpatientDoctorNo != null">
+        outpatient_doctor_no,
+      </if>
+      <if test="outpatientDoctorName != null">
+        outpatient_doctor_name,
+      </if>
+      <if test="startTime != null">
+        start_time,
+      </if>
+      <if test="endTime != null">
+        end_time,
+      </if>
+      <if test="patientNum != null">
+        patient_num,
+      </if>
+      <if test="checkSumPrice != null">
+        check_sum_price,
+      </if>
+      <if test="disposeSumPrice != null">
+        dispose_sum_price,
+      </if>
+      <if test="inspectionSumPrice != null">
+        inspection_sum_price,
+      </if>
+      <if test="herbalSumPrice != null">
+        herbal_sum_price,
+      </if>
+      <if test="medicalSumPrice != null">
+        medical_sum_price,
+      </if>
+      <if test="surgerySumPrice != null">
+        surgery_sum_price,
+      </if>
+      <if test="registeredSumPrice != null">
+        registered_sum_price,
+      </if>
+      <if test="sumPrice != null">
+        sum_price,
+      </if>
+      <if test="otherSumPrice != null">
+        other_sum_price,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="outpatientDoctorNo != null">
+        #{outpatientDoctorNo,jdbcType=INTEGER},
+      </if>
+      <if test="outpatientDoctorName != null">
+        #{outpatientDoctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="patientNum != null">
+        #{patientNum,jdbcType=INTEGER},
+      </if>
+      <if test="checkSumPrice != null">
+        #{checkSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="disposeSumPrice != null">
+        #{disposeSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="inspectionSumPrice != null">
+        #{inspectionSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="herbalSumPrice != null">
+        #{herbalSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="medicalSumPrice != null">
+        #{medicalSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="surgerySumPrice != null">
+        #{surgerySumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="registeredSumPrice != null">
+        #{registeredSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="sumPrice != null">
+        #{sumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="otherSumPrice != null">
+        #{otherSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hospital.model.OdWorkloadExample" resultType="java.lang.Long">
+    select count(*) from od_workload
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update od_workload
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.outpatientDoctorNo != null">
+        outpatient_doctor_no = #{record.outpatientDoctorNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.outpatientDoctorName != null">
+        outpatient_doctor_name = #{record.outpatientDoctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.startTime != null">
+        start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.endTime != null">
+        end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.patientNum != null">
+        patient_num = #{record.patientNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.checkSumPrice != null">
+        check_sum_price = #{record.checkSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.disposeSumPrice != null">
+        dispose_sum_price = #{record.disposeSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.inspectionSumPrice != null">
+        inspection_sum_price = #{record.inspectionSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.herbalSumPrice != null">
+        herbal_sum_price = #{record.herbalSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.medicalSumPrice != null">
+        medical_sum_price = #{record.medicalSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.surgerySumPrice != null">
+        surgery_sum_price = #{record.surgerySumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.registeredSumPrice != null">
+        registered_sum_price = #{record.registeredSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.sumPrice != null">
+        sum_price = #{record.sumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.otherSumPrice != null">
+        other_sum_price = #{record.otherSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update od_workload
+    set id = #{record.id,jdbcType=INTEGER},
+      outpatient_doctor_no = #{record.outpatientDoctorNo,jdbcType=INTEGER},
+      outpatient_doctor_name = #{record.outpatientDoctorName,jdbcType=VARCHAR},
+      start_time = #{record.startTime,jdbcType=TIMESTAMP},
+      end_time = #{record.endTime,jdbcType=TIMESTAMP},
+      patient_num = #{record.patientNum,jdbcType=INTEGER},
+      check_sum_price = #{record.checkSumPrice,jdbcType=DOUBLE},
+      dispose_sum_price = #{record.disposeSumPrice,jdbcType=DOUBLE},
+      inspection_sum_price = #{record.inspectionSumPrice,jdbcType=DOUBLE},
+      herbal_sum_price = #{record.herbalSumPrice,jdbcType=DOUBLE},
+      medical_sum_price = #{record.medicalSumPrice,jdbcType=DOUBLE},
+      surgery_sum_price = #{record.surgerySumPrice,jdbcType=DOUBLE},
+      registered_sum_price = #{record.registeredSumPrice,jdbcType=DOUBLE},
+      sum_price = #{record.sumPrice,jdbcType=DOUBLE},
+      other_sum_price = #{record.otherSumPrice,jdbcType=DOUBLE},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      state = #{record.state,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hospital.model.OdWorkload">
+    update od_workload
+    <set>
+      <if test="outpatientDoctorNo != null">
+        outpatient_doctor_no = #{outpatientDoctorNo,jdbcType=INTEGER},
+      </if>
+      <if test="outpatientDoctorName != null">
+        outpatient_doctor_name = #{outpatientDoctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null">
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="patientNum != null">
+        patient_num = #{patientNum,jdbcType=INTEGER},
+      </if>
+      <if test="checkSumPrice != null">
+        check_sum_price = #{checkSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="disposeSumPrice != null">
+        dispose_sum_price = #{disposeSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="inspectionSumPrice != null">
+        inspection_sum_price = #{inspectionSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="herbalSumPrice != null">
+        herbal_sum_price = #{herbalSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="medicalSumPrice != null">
+        medical_sum_price = #{medicalSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="surgerySumPrice != null">
+        surgery_sum_price = #{surgerySumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="registeredSumPrice != null">
+        registered_sum_price = #{registeredSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="sumPrice != null">
+        sum_price = #{sumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="otherSumPrice != null">
+        other_sum_price = #{otherSumPrice,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hospital.model.OdWorkload">
+    update od_workload
+    set outpatient_doctor_no = #{outpatientDoctorNo,jdbcType=INTEGER},
+      outpatient_doctor_name = #{outpatientDoctorName,jdbcType=VARCHAR},
+      start_time = #{startTime,jdbcType=TIMESTAMP},
+      end_time = #{endTime,jdbcType=TIMESTAMP},
+      patient_num = #{patientNum,jdbcType=INTEGER},
+      check_sum_price = #{checkSumPrice,jdbcType=DOUBLE},
+      dispose_sum_price = #{disposeSumPrice,jdbcType=DOUBLE},
+      inspection_sum_price = #{inspectionSumPrice,jdbcType=DOUBLE},
+      herbal_sum_price = #{herbalSumPrice,jdbcType=DOUBLE},
+      medical_sum_price = #{medicalSumPrice,jdbcType=DOUBLE},
+      surgery_sum_price = #{surgerySumPrice,jdbcType=DOUBLE},
+      registered_sum_price = #{registeredSumPrice,jdbcType=DOUBLE},
+      sum_price = #{sumPrice,jdbcType=DOUBLE},
+      other_sum_price = #{otherSumPrice,jdbcType=DOUBLE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

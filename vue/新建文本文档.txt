@@ -1,0 +1,3 @@
+首先程序是加载index.html,然后回自动地把main.js作为html的js组件，
+然后app中就绑定了这个template模板。
+那么如果我们自定义组件进行编写的话，我们也需要写一个vue，然后vue中引用其他的组件

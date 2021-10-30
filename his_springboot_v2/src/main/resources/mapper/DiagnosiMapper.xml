@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.mapper.DiagnosiMapper">
+  <resultMap id="BaseResultMap" type="com.hospital.model.Diagnosi">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="icd" jdbcType="VARCHAR" property="icd" />
+    <result column="disease_name" jdbcType="VARCHAR" property="diseaseName" />
+    <result column="is_main" jdbcType="CHAR" property="isMain" />
+    <result column="is_fu" jdbcType="CHAR" property="isFu" />
+    <result column="onset_date" jdbcType="DATE" property="onsetDate" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, icd, disease_name, is_main, is_fu, onset_date, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hospital.model.DiagnosiExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from diagnosi
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from diagnosi
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from diagnosi
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hospital.model.DiagnosiExample">
+    delete from diagnosi
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hospital.model.Diagnosi">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into diagnosi (icd, disease_name, is_main, 
+      is_fu, onset_date, create_time
+      )
+    values (#{icd,jdbcType=VARCHAR}, #{diseaseName,jdbcType=VARCHAR}, #{isMain,jdbcType=CHAR}, 
+      #{isFu,jdbcType=CHAR}, #{onsetDate,jdbcType=DATE}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hospital.model.Diagnosi">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into diagnosi
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="icd != null">
+        icd,
+      </if>
+      <if test="diseaseName != null">
+        disease_name,
+      </if>
+      <if test="isMain != null">
+        is_main,
+      </if>
+      <if test="isFu != null">
+        is_fu,
+      </if>
+      <if test="onsetDate != null">
+        onset_date,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="icd != null">
+        #{icd,jdbcType=VARCHAR},
+      </if>
+      <if test="diseaseName != null">
+        #{diseaseName,jdbcType=VARCHAR},
+      </if>
+      <if test="isMain != null">
+        #{isMain,jdbcType=CHAR},
+      </if>
+      <if test="isFu != null">
+        #{isFu,jdbcType=CHAR},
+      </if>
+      <if test="onsetDate != null">
+        #{onsetDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hospital.model.DiagnosiExample" resultType="java.lang.Long">
+    select count(*) from diagnosi
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update diagnosi
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.icd != null">
+        icd = #{record.icd,jdbcType=VARCHAR},
+      </if>
+      <if test="record.diseaseName != null">
+        disease_name = #{record.diseaseName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.isMain != null">
+        is_main = #{record.isMain,jdbcType=CHAR},
+      </if>
+      <if test="record.isFu != null">
+        is_fu = #{record.isFu,jdbcType=CHAR},
+      </if>
+      <if test="record.onsetDate != null">
+        onset_date = #{record.onsetDate,jdbcType=DATE},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update diagnosi
+    set id = #{record.id,jdbcType=INTEGER},
+      icd = #{record.icd,jdbcType=VARCHAR},
+      disease_name = #{record.diseaseName,jdbcType=VARCHAR},
+      is_main = #{record.isMain,jdbcType=CHAR},
+      is_fu = #{record.isFu,jdbcType=CHAR},
+      onset_date = #{record.onsetDate,jdbcType=DATE},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hospital.model.Diagnosi">
+    update diagnosi
+    <set>
+      <if test="icd != null">
+        icd = #{icd,jdbcType=VARCHAR},
+      </if>
+      <if test="diseaseName != null">
+        disease_name = #{diseaseName,jdbcType=VARCHAR},
+      </if>
+      <if test="isMain != null">
+        is_main = #{isMain,jdbcType=CHAR},
+      </if>
+      <if test="isFu != null">
+        is_fu = #{isFu,jdbcType=CHAR},
+      </if>
+      <if test="onsetDate != null">
+        onset_date = #{onsetDate,jdbcType=DATE},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hospital.model.Diagnosi">
+    update diagnosi
+    set icd = #{icd,jdbcType=VARCHAR},
+      disease_name = #{diseaseName,jdbcType=VARCHAR},
+      is_main = #{isMain,jdbcType=CHAR},
+      is_fu = #{isFu,jdbcType=CHAR},
+      onset_date = #{onsetDate,jdbcType=DATE},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

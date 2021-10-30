@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.mapper.MedicinePrescriptionDrugsCopy1Mapper">
+  <resultMap id="BaseResultMap" type="com.hospital.model.MedicinePrescriptionDrugsCopy1">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="drugs_no" jdbcType="INTEGER" property="drugsNo" />
+    <result column="drugs_name" jdbcType="VARCHAR" property="drugsName" />
+    <result column="drugs_format" jdbcType="VARCHAR" property="drugsFormat" />
+    <result column="drugs_usage" jdbcType="VARCHAR" property="drugsUsage" />
+    <result column="drugs_dosage" jdbcType="VARCHAR" property="drugsDosage" />
+    <result column="drugs_num" jdbcType="INTEGER" property="drugsNum" />
+    <result column="drugs_price" jdbcType="DECIMAL" property="drugsPrice" />
+    <result column="user_warns" jdbcType="VARCHAR" property="userWarns" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, drugs_no, drugs_name, drugs_format, drugs_usage, drugs_dosage, drugs_num, drugs_price, 
+    user_warns
+  </sql>
+  <select id="selectByExample" parameterType="com.hospital.model.MedicinePrescriptionDrugsCopy1Example" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from medicine_prescription_drugs_copy1
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from medicine_prescription_drugs_copy1
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from medicine_prescription_drugs_copy1
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hospital.model.MedicinePrescriptionDrugsCopy1Example">
+    delete from medicine_prescription_drugs_copy1
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hospital.model.MedicinePrescriptionDrugsCopy1">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into medicine_prescription_drugs_copy1 (drugs_no, drugs_name, drugs_format, 
+      drugs_usage, drugs_dosage, drugs_num, 
+      drugs_price, user_warns)
+    values (#{drugsNo,jdbcType=INTEGER}, #{drugsName,jdbcType=VARCHAR}, #{drugsFormat,jdbcType=VARCHAR}, 
+      #{drugsUsage,jdbcType=VARCHAR}, #{drugsDosage,jdbcType=VARCHAR}, #{drugsNum,jdbcType=INTEGER}, 
+      #{drugsPrice,jdbcType=DECIMAL}, #{userWarns,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hospital.model.MedicinePrescriptionDrugsCopy1">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into medicine_prescription_drugs_copy1
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="drugsNo != null">
+        drugs_no,
+      </if>
+      <if test="drugsName != null">
+        drugs_name,
+      </if>
+      <if test="drugsFormat != null">
+        drugs_format,
+      </if>
+      <if test="drugsUsage != null">
+        drugs_usage,
+      </if>
+      <if test="drugsDosage != null">
+        drugs_dosage,
+      </if>
+      <if test="drugsNum != null">
+        drugs_num,
+      </if>
+      <if test="drugsPrice != null">
+        drugs_price,
+      </if>
+      <if test="userWarns != null">
+        user_warns,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="drugsNo != null">
+        #{drugsNo,jdbcType=INTEGER},
+      </if>
+      <if test="drugsName != null">
+        #{drugsName,jdbcType=VARCHAR},
+      </if>
+      <if test="drugsFormat != null">
+        #{drugsFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="drugsUsage != null">
+        #{drugsUsage,jdbcType=VARCHAR},
+      </if>
+      <if test="drugsDosage != null">
+        #{drugsDosage,jdbcType=VARCHAR},
+      </if>
+      <if test="drugsNum != null">
+        #{drugsNum,jdbcType=INTEGER},
+      </if>
+      <if test="drugsPrice != null">
+        #{drugsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="userWarns != null">
+        #{userWarns,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hospital.model.MedicinePrescriptionDrugsCopy1Example" resultType="java.lang.Long">
+    select count(*) from medicine_prescription_drugs_copy1
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update medicine_prescription_drugs_copy1
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.drugsNo != null">
+        drugs_no = #{record.drugsNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.drugsName != null">
+        drugs_name = #{record.drugsName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.drugsFormat != null">
+        drugs_format = #{record.drugsFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="record.drugsUsage != null">
+        drugs_usage = #{record.drugsUsage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.drugsDosage != null">
+        drugs_dosage = #{record.drugsDosage,jdbcType=VARCHAR},
+      </if>
+      <if test="record.drugsNum != null">
+        drugs_num = #{record.drugsNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.drugsPrice != null">
+        drugs_price = #{record.drugsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.userWarns != null">
+        user_warns = #{record.userWarns,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update medicine_prescription_drugs_copy1
+    set id = #{record.id,jdbcType=INTEGER},
+      drugs_no = #{record.drugsNo,jdbcType=INTEGER},
+      drugs_name = #{record.drugsName,jdbcType=VARCHAR},
+      drugs_format = #{record.drugsFormat,jdbcType=VARCHAR},
+      drugs_usage = #{record.drugsUsage,jdbcType=VARCHAR},
+      drugs_dosage = #{record.drugsDosage,jdbcType=VARCHAR},
+      drugs_num = #{record.drugsNum,jdbcType=INTEGER},
+      drugs_price = #{record.drugsPrice,jdbcType=DECIMAL},
+      user_warns = #{record.userWarns,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hospital.model.MedicinePrescriptionDrugsCopy1">
+    update medicine_prescription_drugs_copy1
+    <set>
+      <if test="drugsNo != null">
+        drugs_no = #{drugsNo,jdbcType=INTEGER},
+      </if>
+      <if test="drugsName != null">
+        drugs_name = #{drugsName,jdbcType=VARCHAR},
+      </if>
+      <if test="drugsFormat != null">
+        drugs_format = #{drugsFormat,jdbcType=VARCHAR},
+      </if>
+      <if test="drugsUsage != null">
+        drugs_usage = #{drugsUsage,jdbcType=VARCHAR},
+      </if>
+      <if test="drugsDosage != null">
+        drugs_dosage = #{drugsDosage,jdbcType=VARCHAR},
+      </if>
+      <if test="drugsNum != null">
+        drugs_num = #{drugsNum,jdbcType=INTEGER},
+      </if>
+      <if test="drugsPrice != null">
+        drugs_price = #{drugsPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="userWarns != null">
+        user_warns = #{userWarns,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hospital.model.MedicinePrescriptionDrugsCopy1">
+    update medicine_prescription_drugs_copy1
+    set drugs_no = #{drugsNo,jdbcType=INTEGER},
+      drugs_name = #{drugsName,jdbcType=VARCHAR},
+      drugs_format = #{drugsFormat,jdbcType=VARCHAR},
+      drugs_usage = #{drugsUsage,jdbcType=VARCHAR},
+      drugs_dosage = #{drugsDosage,jdbcType=VARCHAR},
+      drugs_num = #{drugsNum,jdbcType=INTEGER},
+      drugs_price = #{drugsPrice,jdbcType=DECIMAL},
+      user_warns = #{userWarns,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

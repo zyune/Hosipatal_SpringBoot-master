@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.mapper.PatientFeeDetailMapper">
+  <resultMap id="BaseResultMap" type="com.hospital.model.PatientFeeDetail">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="registration_info_no" jdbcType="INTEGER" property="registrationInfoNo" />
+    <result column="patient_name" jdbcType="VARCHAR" property="patientName" />
+    <result column="medical_record" jdbcType="CHAR" property="medicalRecord" />
+    <result column="check_fee_no" jdbcType="INTEGER" property="checkFeeNo" />
+    <result column="check_fee_price" jdbcType="DECIMAL" property="checkFeePrice" />
+    <result column="herbal_prescription_fee_no" jdbcType="INTEGER" property="herbalPrescriptionFeeNo" />
+    <result column="herbal_prescription_fee_price" jdbcType="DECIMAL" property="herbalPrescriptionFeePrice" />
+    <result column="medicine_prescription_fee_no" jdbcType="INTEGER" property="medicinePrescriptionFeeNo" />
+    <result column="medicine_prescription_fee_price" jdbcType="DECIMAL" property="medicinePrescriptionFeePrice" />
+    <result column="dispos_prescription_fee_no" jdbcType="INTEGER" property="disposPrescriptionFeeNo" />
+    <result column="dispos_prescription_fee_price" jdbcType="DECIMAL" property="disposPrescriptionFeePrice" />
+    <result column="sum_price" jdbcType="DECIMAL" property="sumPrice" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, registration_info_no, patient_name, medical_record, check_fee_no, check_fee_price, 
+    herbal_prescription_fee_no, herbal_prescription_fee_price, medicine_prescription_fee_no, 
+    medicine_prescription_fee_price, dispos_prescription_fee_no, dispos_prescription_fee_price, 
+    sum_price, create_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hospital.model.PatientFeeDetailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from patient_fee_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from patient_fee_detail
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from patient_fee_detail
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hospital.model.PatientFeeDetailExample">
+    delete from patient_fee_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hospital.model.PatientFeeDetail">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into patient_fee_detail (registration_info_no, patient_name, 
+      medical_record, check_fee_no, check_fee_price, 
+      herbal_prescription_fee_no, herbal_prescription_fee_price, 
+      medicine_prescription_fee_no, medicine_prescription_fee_price, 
+      dispos_prescription_fee_no, dispos_prescription_fee_price, 
+      sum_price, create_time)
+    values (#{registrationInfoNo,jdbcType=INTEGER}, #{patientName,jdbcType=VARCHAR}, 
+      #{medicalRecord,jdbcType=CHAR}, #{checkFeeNo,jdbcType=INTEGER}, #{checkFeePrice,jdbcType=DECIMAL}, 
+      #{herbalPrescriptionFeeNo,jdbcType=INTEGER}, #{herbalPrescriptionFeePrice,jdbcType=DECIMAL}, 
+      #{medicinePrescriptionFeeNo,jdbcType=INTEGER}, #{medicinePrescriptionFeePrice,jdbcType=DECIMAL}, 
+      #{disposPrescriptionFeeNo,jdbcType=INTEGER}, #{disposPrescriptionFeePrice,jdbcType=DECIMAL}, 
+      #{sumPrice,jdbcType=DECIMAL}, #{createTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hospital.model.PatientFeeDetail">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into patient_fee_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="registrationInfoNo != null">
+        registration_info_no,
+      </if>
+      <if test="patientName != null">
+        patient_name,
+      </if>
+      <if test="medicalRecord != null">
+        medical_record,
+      </if>
+      <if test="checkFeeNo != null">
+        check_fee_no,
+      </if>
+      <if test="checkFeePrice != null">
+        check_fee_price,
+      </if>
+      <if test="herbalPrescriptionFeeNo != null">
+        herbal_prescription_fee_no,
+      </if>
+      <if test="herbalPrescriptionFeePrice != null">
+        herbal_prescription_fee_price,
+      </if>
+      <if test="medicinePrescriptionFeeNo != null">
+        medicine_prescription_fee_no,
+      </if>
+      <if test="medicinePrescriptionFeePrice != null">
+        medicine_prescription_fee_price,
+      </if>
+      <if test="disposPrescriptionFeeNo != null">
+        dispos_prescription_fee_no,
+      </if>
+      <if test="disposPrescriptionFeePrice != null">
+        dispos_prescription_fee_price,
+      </if>
+      <if test="sumPrice != null">
+        sum_price,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="registrationInfoNo != null">
+        #{registrationInfoNo,jdbcType=INTEGER},
+      </if>
+      <if test="patientName != null">
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalRecord != null">
+        #{medicalRecord,jdbcType=CHAR},
+      </if>
+      <if test="checkFeeNo != null">
+        #{checkFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="checkFeePrice != null">
+        #{checkFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="herbalPrescriptionFeeNo != null">
+        #{herbalPrescriptionFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="herbalPrescriptionFeePrice != null">
+        #{herbalPrescriptionFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="medicinePrescriptionFeeNo != null">
+        #{medicinePrescriptionFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="medicinePrescriptionFeePrice != null">
+        #{medicinePrescriptionFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="disposPrescriptionFeeNo != null">
+        #{disposPrescriptionFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="disposPrescriptionFeePrice != null">
+        #{disposPrescriptionFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sumPrice != null">
+        #{sumPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hospital.model.PatientFeeDetailExample" resultType="java.lang.Long">
+    select count(*) from patient_fee_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update patient_fee_detail
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.registrationInfoNo != null">
+        registration_info_no = #{record.registrationInfoNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.patientName != null">
+        patient_name = #{record.patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.medicalRecord != null">
+        medical_record = #{record.medicalRecord,jdbcType=CHAR},
+      </if>
+      <if test="record.checkFeeNo != null">
+        check_fee_no = #{record.checkFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.checkFeePrice != null">
+        check_fee_price = #{record.checkFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.herbalPrescriptionFeeNo != null">
+        herbal_prescription_fee_no = #{record.herbalPrescriptionFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.herbalPrescriptionFeePrice != null">
+        herbal_prescription_fee_price = #{record.herbalPrescriptionFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.medicinePrescriptionFeeNo != null">
+        medicine_prescription_fee_no = #{record.medicinePrescriptionFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.medicinePrescriptionFeePrice != null">
+        medicine_prescription_fee_price = #{record.medicinePrescriptionFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.disposPrescriptionFeeNo != null">
+        dispos_prescription_fee_no = #{record.disposPrescriptionFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.disposPrescriptionFeePrice != null">
+        dispos_prescription_fee_price = #{record.disposPrescriptionFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.sumPrice != null">
+        sum_price = #{record.sumPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update patient_fee_detail
+    set id = #{record.id,jdbcType=INTEGER},
+      registration_info_no = #{record.registrationInfoNo,jdbcType=INTEGER},
+      patient_name = #{record.patientName,jdbcType=VARCHAR},
+      medical_record = #{record.medicalRecord,jdbcType=CHAR},
+      check_fee_no = #{record.checkFeeNo,jdbcType=INTEGER},
+      check_fee_price = #{record.checkFeePrice,jdbcType=DECIMAL},
+      herbal_prescription_fee_no = #{record.herbalPrescriptionFeeNo,jdbcType=INTEGER},
+      herbal_prescription_fee_price = #{record.herbalPrescriptionFeePrice,jdbcType=DECIMAL},
+      medicine_prescription_fee_no = #{record.medicinePrescriptionFeeNo,jdbcType=INTEGER},
+      medicine_prescription_fee_price = #{record.medicinePrescriptionFeePrice,jdbcType=DECIMAL},
+      dispos_prescription_fee_no = #{record.disposPrescriptionFeeNo,jdbcType=INTEGER},
+      dispos_prescription_fee_price = #{record.disposPrescriptionFeePrice,jdbcType=DECIMAL},
+      sum_price = #{record.sumPrice,jdbcType=DECIMAL},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hospital.model.PatientFeeDetail">
+    update patient_fee_detail
+    <set>
+      <if test="registrationInfoNo != null">
+        registration_info_no = #{registrationInfoNo,jdbcType=INTEGER},
+      </if>
+      <if test="patientName != null">
+        patient_name = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="medicalRecord != null">
+        medical_record = #{medicalRecord,jdbcType=CHAR},
+      </if>
+      <if test="checkFeeNo != null">
+        check_fee_no = #{checkFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="checkFeePrice != null">
+        check_fee_price = #{checkFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="herbalPrescriptionFeeNo != null">
+        herbal_prescription_fee_no = #{herbalPrescriptionFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="herbalPrescriptionFeePrice != null">
+        herbal_prescription_fee_price = #{herbalPrescriptionFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="medicinePrescriptionFeeNo != null">
+        medicine_prescription_fee_no = #{medicinePrescriptionFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="medicinePrescriptionFeePrice != null">
+        medicine_prescription_fee_price = #{medicinePrescriptionFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="disposPrescriptionFeeNo != null">
+        dispos_prescription_fee_no = #{disposPrescriptionFeeNo,jdbcType=INTEGER},
+      </if>
+      <if test="disposPrescriptionFeePrice != null">
+        dispos_prescription_fee_price = #{disposPrescriptionFeePrice,jdbcType=DECIMAL},
+      </if>
+      <if test="sumPrice != null">
+        sum_price = #{sumPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hospital.model.PatientFeeDetail">
+    update patient_fee_detail
+    set registration_info_no = #{registrationInfoNo,jdbcType=INTEGER},
+      patient_name = #{patientName,jdbcType=VARCHAR},
+      medical_record = #{medicalRecord,jdbcType=CHAR},
+      check_fee_no = #{checkFeeNo,jdbcType=INTEGER},
+      check_fee_price = #{checkFeePrice,jdbcType=DECIMAL},
+      herbal_prescription_fee_no = #{herbalPrescriptionFeeNo,jdbcType=INTEGER},
+      herbal_prescription_fee_price = #{herbalPrescriptionFeePrice,jdbcType=DECIMAL},
+      medicine_prescription_fee_no = #{medicinePrescriptionFeeNo,jdbcType=INTEGER},
+      medicine_prescription_fee_price = #{medicinePrescriptionFeePrice,jdbcType=DECIMAL},
+      dispos_prescription_fee_no = #{disposPrescriptionFeeNo,jdbcType=INTEGER},
+      dispos_prescription_fee_price = #{disposPrescriptionFeePrice,jdbcType=DECIMAL},
+      sum_price = #{sumPrice,jdbcType=DECIMAL},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

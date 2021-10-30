@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.mapper.RegistrationFeeMapper">
+  <resultMap id="BaseResultMap" type="com.hospital.model.RegistrationFee">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="registration_info_no" jdbcType="INTEGER" property="registrationInfoNo" />
+    <result column="department_no" jdbcType="INTEGER" property="departmentNo" />
+    <result column="medical_record" jdbcType="CHAR" property="medicalRecord" />
+    <result column="patient_name" jdbcType="VARCHAR" property="patientName" />
+    <result column="registration_level_no" jdbcType="INTEGER" property="registrationLevelNo" />
+    <result column="registrar_no" jdbcType="INTEGER" property="registrarNo" />
+    <result column="registrar_name" jdbcType="VARCHAR" property="registrarName" />
+    <result column="price" jdbcType="DOUBLE" property="price" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="state" jdbcType="CHAR" property="state" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, registration_info_no, department_no, medical_record, patient_name, registration_level_no, 
+    registrar_no, registrar_name, price, create_time, state
+  </sql>
+  <select id="selectByExample" parameterType="com.hospital.model.RegistrationFeeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from registration_fee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from registration_fee
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from registration_fee
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hospital.model.RegistrationFeeExample">
+    delete from registration_fee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hospital.model.RegistrationFee">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into registration_fee (registration_info_no, department_no, 
+      medical_record, patient_name, registration_level_no, 
+      registrar_no, registrar_name, price, 
+      create_time, state)
+    values (#{registrationInfoNo,jdbcType=INTEGER}, #{departmentNo,jdbcType=INTEGER}, 
+      #{medicalRecord,jdbcType=CHAR}, #{patientName,jdbcType=VARCHAR}, #{registrationLevelNo,jdbcType=INTEGER}, 
+      #{registrarNo,jdbcType=INTEGER}, #{registrarName,jdbcType=VARCHAR}, #{price,jdbcType=DOUBLE}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{state,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hospital.model.RegistrationFee">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into registration_fee
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="registrationInfoNo != null">
+        registration_info_no,
+      </if>
+      <if test="departmentNo != null">
+        department_no,
+      </if>
+      <if test="medicalRecord != null">
+        medical_record,
+      </if>
+      <if test="patientName != null">
+        patient_name,
+      </if>
+      <if test="registrationLevelNo != null">
+        registration_level_no,
+      </if>
+      <if test="registrarNo != null">
+        registrar_no,
+      </if>
+      <if test="registrarName != null">
+        registrar_name,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="registrationInfoNo != null">
+        #{registrationInfoNo,jdbcType=INTEGER},
+      </if>
+      <if test="departmentNo != null">
+        #{departmentNo,jdbcType=INTEGER},
+      </if>
+      <if test="medicalRecord != null">
+        #{medicalRecord,jdbcType=CHAR},
+      </if>
+      <if test="patientName != null">
+        #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationLevelNo != null">
+        #{registrationLevelNo,jdbcType=INTEGER},
+      </if>
+      <if test="registrarNo != null">
+        #{registrarNo,jdbcType=INTEGER},
+      </if>
+      <if test="registrarName != null">
+        #{registrarName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hospital.model.RegistrationFeeExample" resultType="java.lang.Long">
+    select count(*) from registration_fee
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update registration_fee
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.registrationInfoNo != null">
+        registration_info_no = #{record.registrationInfoNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.departmentNo != null">
+        department_no = #{record.departmentNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.medicalRecord != null">
+        medical_record = #{record.medicalRecord,jdbcType=CHAR},
+      </if>
+      <if test="record.patientName != null">
+        patient_name = #{record.patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationLevelNo != null">
+        registration_level_no = #{record.registrationLevelNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.registrarNo != null">
+        registrar_no = #{record.registrarNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.registrarName != null">
+        registrar_name = #{record.registrarName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.price != null">
+        price = #{record.price,jdbcType=DOUBLE},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update registration_fee
+    set id = #{record.id,jdbcType=INTEGER},
+      registration_info_no = #{record.registrationInfoNo,jdbcType=INTEGER},
+      department_no = #{record.departmentNo,jdbcType=INTEGER},
+      medical_record = #{record.medicalRecord,jdbcType=CHAR},
+      patient_name = #{record.patientName,jdbcType=VARCHAR},
+      registration_level_no = #{record.registrationLevelNo,jdbcType=INTEGER},
+      registrar_no = #{record.registrarNo,jdbcType=INTEGER},
+      registrar_name = #{record.registrarName,jdbcType=VARCHAR},
+      price = #{record.price,jdbcType=DOUBLE},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      state = #{record.state,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hospital.model.RegistrationFee">
+    update registration_fee
+    <set>
+      <if test="registrationInfoNo != null">
+        registration_info_no = #{registrationInfoNo,jdbcType=INTEGER},
+      </if>
+      <if test="departmentNo != null">
+        department_no = #{departmentNo,jdbcType=INTEGER},
+      </if>
+      <if test="medicalRecord != null">
+        medical_record = #{medicalRecord,jdbcType=CHAR},
+      </if>
+      <if test="patientName != null">
+        patient_name = #{patientName,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationLevelNo != null">
+        registration_level_no = #{registrationLevelNo,jdbcType=INTEGER},
+      </if>
+      <if test="registrarNo != null">
+        registrar_no = #{registrarNo,jdbcType=INTEGER},
+      </if>
+      <if test="registrarName != null">
+        registrar_name = #{registrarName,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DOUBLE},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hospital.model.RegistrationFee">
+    update registration_fee
+    set registration_info_no = #{registrationInfoNo,jdbcType=INTEGER},
+      department_no = #{departmentNo,jdbcType=INTEGER},
+      medical_record = #{medicalRecord,jdbcType=CHAR},
+      patient_name = #{patientName,jdbcType=VARCHAR},
+      registration_level_no = #{registrationLevelNo,jdbcType=INTEGER},
+      registrar_no = #{registrarNo,jdbcType=INTEGER},
+      registrar_name = #{registrarName,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DOUBLE},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

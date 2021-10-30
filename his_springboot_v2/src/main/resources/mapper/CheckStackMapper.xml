@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hospital.mapper.CheckStackMapper">
+  <resultMap id="BaseResultMap" type="com.hospital.model.CheckStack">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="check_stack_name" jdbcType="VARCHAR" property="checkStackName" />
+    <result column="usable_range" jdbcType="CHAR" property="usableRange" />
+    <result column="department_no" jdbcType="VARCHAR" property="departmentNo" />
+    <result column="department_name" jdbcType="VARCHAR" property="departmentName" />
+    <result column="outpatient_doctor_no" jdbcType="INTEGER" property="outpatientDoctorNo" />
+    <result column="outpatient_doctor_name" jdbcType="VARCHAR" property="outpatientDoctorName" />
+    <result column="requirements" jdbcType="VARCHAR" property="requirements" />
+    <result column="fmed_item_nos" jdbcType="VARCHAR" property="fmedItemNos" />
+    <result column="fmed_item_names" jdbcType="VARCHAR" property="fmedItemNames" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="check_type" jdbcType="CHAR" property="checkType" />
+    <result column="state" jdbcType="CHAR" property="state" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, check_stack_name, usable_range, department_no, department_name, outpatient_doctor_no, 
+    outpatient_doctor_name, requirements, fmed_item_nos, fmed_item_names, create_time, 
+    check_type, state
+  </sql>
+  <select id="selectByExample" parameterType="com.hospital.model.CheckStackExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from check_stack
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from check_stack
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from check_stack
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hospital.model.CheckStackExample">
+    delete from check_stack
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hospital.model.CheckStack">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into check_stack (check_stack_name, usable_range, department_no, 
+      department_name, outpatient_doctor_no, outpatient_doctor_name, 
+      requirements, fmed_item_nos, fmed_item_names, 
+      create_time, check_type, state
+      )
+    values (#{checkStackName,jdbcType=VARCHAR}, #{usableRange,jdbcType=CHAR}, #{departmentNo,jdbcType=VARCHAR}, 
+      #{departmentName,jdbcType=VARCHAR}, #{outpatientDoctorNo,jdbcType=INTEGER}, #{outpatientDoctorName,jdbcType=VARCHAR}, 
+      #{requirements,jdbcType=VARCHAR}, #{fmedItemNos,jdbcType=VARCHAR}, #{fmedItemNames,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{checkType,jdbcType=CHAR}, #{state,jdbcType=CHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.hospital.model.CheckStack">
+    <selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into check_stack
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="checkStackName != null">
+        check_stack_name,
+      </if>
+      <if test="usableRange != null">
+        usable_range,
+      </if>
+      <if test="departmentNo != null">
+        department_no,
+      </if>
+      <if test="departmentName != null">
+        department_name,
+      </if>
+      <if test="outpatientDoctorNo != null">
+        outpatient_doctor_no,
+      </if>
+      <if test="outpatientDoctorName != null">
+        outpatient_doctor_name,
+      </if>
+      <if test="requirements != null">
+        requirements,
+      </if>
+      <if test="fmedItemNos != null">
+        fmed_item_nos,
+      </if>
+      <if test="fmedItemNames != null">
+        fmed_item_names,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="checkType != null">
+        check_type,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="checkStackName != null">
+        #{checkStackName,jdbcType=VARCHAR},
+      </if>
+      <if test="usableRange != null">
+        #{usableRange,jdbcType=CHAR},
+      </if>
+      <if test="departmentNo != null">
+        #{departmentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null">
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="outpatientDoctorNo != null">
+        #{outpatientDoctorNo,jdbcType=INTEGER},
+      </if>
+      <if test="outpatientDoctorName != null">
+        #{outpatientDoctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="requirements != null">
+        #{requirements,jdbcType=VARCHAR},
+      </if>
+      <if test="fmedItemNos != null">
+        #{fmedItemNos,jdbcType=VARCHAR},
+      </if>
+      <if test="fmedItemNames != null">
+        #{fmedItemNames,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkType != null">
+        #{checkType,jdbcType=CHAR},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hospital.model.CheckStackExample" resultType="java.lang.Long">
+    select count(*) from check_stack
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update check_stack
+    <set>
+      <if test="record.id != null">
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.checkStackName != null">
+        check_stack_name = #{record.checkStackName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usableRange != null">
+        usable_range = #{record.usableRange,jdbcType=CHAR},
+      </if>
+      <if test="record.departmentNo != null">
+        department_no = #{record.departmentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.departmentName != null">
+        department_name = #{record.departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.outpatientDoctorNo != null">
+        outpatient_doctor_no = #{record.outpatientDoctorNo,jdbcType=INTEGER},
+      </if>
+      <if test="record.outpatientDoctorName != null">
+        outpatient_doctor_name = #{record.outpatientDoctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.requirements != null">
+        requirements = #{record.requirements,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fmedItemNos != null">
+        fmed_item_nos = #{record.fmedItemNos,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fmedItemNames != null">
+        fmed_item_names = #{record.fmedItemNames,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null">
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.checkType != null">
+        check_type = #{record.checkType,jdbcType=CHAR},
+      </if>
+      <if test="record.state != null">
+        state = #{record.state,jdbcType=CHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update check_stack
+    set id = #{record.id,jdbcType=INTEGER},
+      check_stack_name = #{record.checkStackName,jdbcType=VARCHAR},
+      usable_range = #{record.usableRange,jdbcType=CHAR},
+      department_no = #{record.departmentNo,jdbcType=VARCHAR},
+      department_name = #{record.departmentName,jdbcType=VARCHAR},
+      outpatient_doctor_no = #{record.outpatientDoctorNo,jdbcType=INTEGER},
+      outpatient_doctor_name = #{record.outpatientDoctorName,jdbcType=VARCHAR},
+      requirements = #{record.requirements,jdbcType=VARCHAR},
+      fmed_item_nos = #{record.fmedItemNos,jdbcType=VARCHAR},
+      fmed_item_names = #{record.fmedItemNames,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      check_type = #{record.checkType,jdbcType=CHAR},
+      state = #{record.state,jdbcType=CHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hospital.model.CheckStack">
+    update check_stack
+    <set>
+      <if test="checkStackName != null">
+        check_stack_name = #{checkStackName,jdbcType=VARCHAR},
+      </if>
+      <if test="usableRange != null">
+        usable_range = #{usableRange,jdbcType=CHAR},
+      </if>
+      <if test="departmentNo != null">
+        department_no = #{departmentNo,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="outpatientDoctorNo != null">
+        outpatient_doctor_no = #{outpatientDoctorNo,jdbcType=INTEGER},
+      </if>
+      <if test="outpatientDoctorName != null">
+        outpatient_doctor_name = #{outpatientDoctorName,jdbcType=VARCHAR},
+      </if>
+      <if test="requirements != null">
+        requirements = #{requirements,jdbcType=VARCHAR},
+      </if>
+      <if test="fmedItemNos != null">
+        fmed_item_nos = #{fmedItemNos,jdbcType=VARCHAR},
+      </if>
+      <if test="fmedItemNames != null">
+        fmed_item_names = #{fmedItemNames,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="checkType != null">
+        check_type = #{checkType,jdbcType=CHAR},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=CHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hospital.model.CheckStack">
+    update check_stack
+    set check_stack_name = #{checkStackName,jdbcType=VARCHAR},
+      usable_range = #{usableRange,jdbcType=CHAR},
+      department_no = #{departmentNo,jdbcType=VARCHAR},
+      department_name = #{departmentName,jdbcType=VARCHAR},
+      outpatient_doctor_no = #{outpatientDoctorNo,jdbcType=INTEGER},
+      outpatient_doctor_name = #{outpatientDoctorName,jdbcType=VARCHAR},
+      requirements = #{requirements,jdbcType=VARCHAR},
+      fmed_item_nos = #{fmedItemNos,jdbcType=VARCHAR},
+      fmed_item_names = #{fmedItemNames,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      check_type = #{checkType,jdbcType=CHAR},
+      state = #{state,jdbcType=CHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
